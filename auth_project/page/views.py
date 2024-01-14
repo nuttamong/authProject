@@ -23,8 +23,21 @@ def LoginPage(req):
     return render(req, 'index.html')
 
 def PostLogin(req):
-    email = req.POST.get('email')
-    pwd = req.POST.get('pwd')
+    email = req.POST.get('user')
+    pwd = req.POST.get('pass')
+
+    try:
+        user = auth.sign_in_with_email_and_password(email, pwd)
+    except:
+        message = "Email or Password is incorrect!!!"
+        return render(req, "index.html", {"message": message})
+    session_id = user['idToken']
+    req.session['uid'] = str(session_id)
+    return render(req, 'index.html')
+
+def PostLoginGmail(req):
+    email = req.POST.get('user')
+    pwd = req.POST.get('pass')
 
     try:
         user = auth.sign_in_with_email_and_password(email, pwd)
@@ -46,6 +59,6 @@ def Register(req):
     return
 
 def PostRegister(req):
-    email = req.POST.get('email')
-    pwd = req.POST.get('pwd')
+    email = req.POST.get('sign-up-user')
+    pwd = req.POST.get('sign-up-pass')
     return
